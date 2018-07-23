@@ -1,0 +1,24 @@
+/**Created by Ken Chang 05/07/2018 for Pukunui Technology**/
+/**Ticket number LJA-305087**/
+/**Please open the new_signup_form.php to find more detailed informations**/
+
+1. This codes will redirect create new user page to a hook form, but still use the same validation in moodle.
+
+2. There are 3 part need be careful
+-> /home/ken/public_html/login/new_signup_form.php (This php file basically copy the existing signup_form.php but done some field customizations for our client)
+-> /home/ken/public_html/login/(lib folder)authlib.php (You must copy this file and paste it into this path /home/ken/public_html/lib and rename it to authlib.php in the folder of lib, it will causes a conflict of same file name, you can rename the former authlib.php file to be old_authlib.php and paste this new authlib.php file into the folder as well)
+-> /home/ken/public_html/login/signup.php (This php file will call customise functions from authlib.php)
+
+
+3. If the description above is quietly complex for you, just follow the steps below
+(1) copy the new_signup_form.php and paste it into your folder (/home/ken/public_html/login)
+(2) copy the (lib folder)authlib.php and go to this path /home/ken/public_html find the authlib.php rename to old_authlib.php then paste the copied file (lib folder)authlib.php and rename it to authlib.php
+(3) Go to this path /home/ken/public_html/login/signup.php open the file and rename those function below of 2 lines
+| $mform_signup = $authplugin->signup_form(); ==> $mform_signup = $authplugin->signup_hook_form();
+| $user = signup_setup_new_user($user); ==> $user = signup_setup_new_user_username_as_email($user);
+
+Step(2) just like replace the original file but keep the former file inside the same folder.
+
+4. How to activate this function?
+Go to your moodle site login as Admin's user.
+Go to site Administration > Search field > type Manage authentication > Enable the 'Email-based self-registration' > Change the drop-down option to 'Email-based self-registration' of self registration field > Save it > Refresh the page and logout your Admin's account, you will be able to see a new register button display on the signup page
